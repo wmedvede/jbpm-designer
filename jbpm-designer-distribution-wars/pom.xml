@@ -50,6 +50,11 @@
       <artifactId>jbpm-designer-standalone</artifactId>
       <type>war</type>
     </dependency>
+
+    <dependency>
+      <groupId>org.kie.uberfire</groupId>
+      <artifactId>kie-uberfire-servlet-security</artifactId>
+    </dependency>
     <!-- External dependencies -->
     <dependency>
         <groupId>org.apache.ant</groupId>
