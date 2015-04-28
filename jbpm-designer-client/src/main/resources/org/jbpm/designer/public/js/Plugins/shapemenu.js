@@ -98,7 +98,10 @@ ORYX.Plugins.ShapeMenuPlugin = {
 				
 				// Show the source view button
 				this.showSourceViewButton();
-				
+
+				// Show the DataIOEditor button
+				this.showDataIOEditorButton();
+
 				// Show the Stencil Buttons
 				this.showStencilButtons(this.currentShapes);	
 				
@@ -239,26 +242,36 @@ ORYX.Plugins.ShapeMenuPlugin = {
 			group:			1,
 			msg:			ORYX.I18N.View.editTaskForm
 		});
-		
+
 		var swbutton = new ORYX.Plugins.ShapeMenuButton({
-			callback:		this.viewNodeSource.bind(this), 
+			callback:		this.viewNodeSource.bind(this),
 			icon: 			ORYX.BASE_FILE_PATH + 'images/view.png',
 			align: 			ORYX.CONFIG.SHAPEMENU_TOP,
 			group:			2,
 			msg:			ORYX.I18N.ShapeMenuPlugin.viewSourceNode
 		});
-		
+
+		var diobutton = new ORYX.Plugins.ShapeMenuButton({
+			callback:		this.showDataIOEditor.bind(this),
+			icon: 			ORYX.BASE_FILE_PATH + 'images/dataio.png',
+			align: 			ORYX.CONFIG.SHAPEMENU_TOP,
+			group:			3,
+			msg:			ORYX.I18N.ShapeMenuPlugin.dataIOEditor
+		});
+
 		this.shapeMenu.setNumberOfButtonsPerLevel(ORYX.CONFIG.SHAPEMENU_BOTTOM, 2);
 		//this.shapeMenu.setNumberOfButtonsPerLevel(ORYX.CONFIG.SHAPEMENU_TOP, 2)
 		this.shapeMenu.addButton(button);
 		this.shapeMenu.addButton(dbutton);
 		this.shapeMenu.addButton(utfbutton);
 		this.shapeMenu.addButton(swbutton);
+		this.shapeMenu.addButton(diobutton);
 		this.morphMenu.getEl().appendTo(button.node);
 		this.morphButton = button;
 		this.dictionaryButton = dbutton;
 		this.taskFormButton = utfbutton;
 		this.sourceViewButton = swbutton;
+		this.dataIOEditorButton = diobutton;
 	},
 	
 	showMorphMenu: function() {
@@ -374,7 +387,11 @@ ORYX.Plugins.ShapeMenuPlugin = {
             }
         });
 	},
-	
+
+	showDataIOEditor: function() {
+		parent.designersignalshowdataioeditor(ORYX.UUID);
+	},
+
 	onSelectionChanged: function(event) {
 		var elements = event.elements;
 
@@ -402,11 +419,11 @@ ORYX.Plugins.ShapeMenuPlugin = {
 			this.taskFormButton.prepareToShow();
 		}
 	},
-	
+
 	showSourceViewButton : function() {
 		// reset group number
 		this.sourceViewButton.group = 2;
-		if(this.currentShapes && this.currentShapes[0] && this.currentShapes[0].properties && this.currentShapes[0].properties['oryx-tasktype'] && 
+		if(this.currentShapes && this.currentShapes[0] && this.currentShapes[0].properties && this.currentShapes[0].properties['oryx-tasktype'] &&
 				this.currentShapes[0].properties['oryx-tasktype'] == "User") {
 			this.sourceViewButton.prepareToShow();
 		} else {
@@ -414,7 +431,19 @@ ORYX.Plugins.ShapeMenuPlugin = {
 			this.sourceViewButton.prepareToShow();
 		}
 	},
-	
+
+	showDataIOEditorButton : function() {
+		// reset group number
+		this.dataIOEditorButton.group = 3;
+		if(this.currentShapes && this.currentShapes[0] && this.currentShapes[0].properties && this.currentShapes[0].properties['oryx-tasktype'] &&
+				this.currentShapes[0].properties['oryx-tasktype'] == "User") {
+			this.dataIOEditorButton.prepareToShow();
+		} else {
+			this.dataIOEditorButton.group = this.dataIOEditorButton.group - 1;
+			this.dataIOEditorButton.prepareToShow();
+		}
+	},
+
 	/**
 	 * Show button for morphing the selected shape into another stencil
 	 */
