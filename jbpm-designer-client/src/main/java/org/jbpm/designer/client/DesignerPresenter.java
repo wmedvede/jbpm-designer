@@ -1,15 +1,21 @@
 package org.jbpm.designer.client;
 
+import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.jbpm.designer.client.popup.ActivityDataIOEditor;
+import org.jbpm.designer.client.shared.AssignmentData;
+import org.jbpm.designer.client.shared.AssignmentRow;
+import org.jbpm.designer.client.shared.Variable.VariableType;
 import org.jbpm.designer.client.type.Bpmn2Type;
 import org.jbpm.designer.service.DesignerAssetService;
 import org.jbpm.designer.service.DesignerContent;
@@ -78,6 +84,9 @@ public class DesignerPresenter
 
     @Inject
     private Bpmn2Type resourceType;
+
+    @Inject
+    private ActivityDataIOEditor activityDataIOEditor;
 
     private DesignerView view;
 
@@ -187,6 +196,13 @@ public class DesignerPresenter
         }
     }-*/;
 
+    private native void publishShowDataIOEditor( DesignerPresenter dp )/*-{
+        $wnd.designersignalshowdataioeditor = function (uri) {
+            dp.@org.jbpm.designer.client.DesignerPresenter::showDataIOEditor(Ljava/lang/String;)(uri);
+        }
+    }-*/;
+
+
     public void closePlace() {
         if ( view.getIsReadOnly() ) {
             placeManager.forceClosePlace( this.place );
@@ -212,6 +228,31 @@ public class DesignerPresenter
                 popup.show();
             }
         } ).get( URIUtil.encode( uri ) );
+    }
+
+    public void showDataIOEditor( String uri ) {
+        showDataMapper();
+
+    }
+
+    AssignmentData assignmentData = new AssignmentData("inStr:String,inInt1:Integer,inCustom1:org.jdl.Custom,inStrConst:String,Skippable",
+            "outStr1:String,outInt1:Integer,outCustom1:org.jdl.Custom",
+            "str1:String,int1:Integer,custom1:org.jdl.Custom",
+//                "[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1",
+            "[din]str1->inStr,[din]int1->inInt1,[din]custom1->inCustom1,[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1",
+            "String:String, Integer:Integer, Boolean, Float, Object");
+
+    public void showDataMapper() {
+        Window.alert("Hello");
+
+        List<AssignmentRow> inputAssignmentRows = assignmentData.getAssignmentRows(VariableType.INPUT);
+        activityDataIOEditor.setInputAssignmentRows(inputAssignmentRows);
+        List<AssignmentRow> outputAssignmentRows = assignmentData.getAssignmentRows(VariableType.OUTPUT);
+        activityDataIOEditor.setOutputAssignmentRows(outputAssignmentRows);
+        activityDataIOEditor.setDataTypes(assignmentData.getDataTypeNames());
+        activityDataIOEditor.setProcessVariables(assignmentData.getProcessVarNames());
+        activityDataIOEditor.show();
+
     }
 
     public void assetRenameEvent( String uri ) {
@@ -337,6 +378,7 @@ public class DesignerPresenter
         this.publishSignalOnAssetUpdate( this );
         this.publishSignalOnAssetExpectConcurrentUpdate( this );
         this.publishClosePlace( this );
+        this.publishShowDataIOEditor(this);
 
         if ( versionRecordManager.getCurrentPath() != null ) {
             assetService.call( new RemoteCallback<String>() {
