@@ -389,7 +389,7 @@ ORYX.Plugins.ShapeMenuPlugin = {
 	},
 
 	showDataIOEditor: function() {
-		parent.designersignalshowdataioeditor(ORYX.UUID);
+		parent.designersignalshowdataioeditor("variable and assignment data");
 	},
 
 	onSelectionChanged: function(event) {

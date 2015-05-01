@@ -197,8 +197,8 @@ public class DesignerPresenter
     }-*/;
 
     private native void publishShowDataIOEditor( DesignerPresenter dp )/*-{
-        $wnd.designersignalshowdataioeditor = function (uri) {
-            dp.@org.jbpm.designer.client.DesignerPresenter::showDataIOEditor(Ljava/lang/String;)(uri);
+        $wnd.designersignalshowdataioeditor = function (assignmentdata) {
+            dp.@org.jbpm.designer.client.DesignerPresenter::showDataIOEditor(Ljava/lang/String;)(assignmentdata);
         }
     }-*/;
 
@@ -227,32 +227,26 @@ public class DesignerPresenter
                                                        } );
                 popup.show();
             }
-        } ).get( URIUtil.encode( uri ) );
+        } ).get(URIUtil.encode(uri));
     }
 
-    public void showDataIOEditor( String uri ) {
-        showDataMapper();
-
-    }
-
-    AssignmentData assignmentData = new AssignmentData("inStr:String,inInt1:Integer,inCustom1:org.jdl.Custom,inStrConst:String,Skippable",
+    AssignmentData _assignmentData = new AssignmentData("inStr:String,inInt1:Integer,inCustom1:org.jdl.Custom,inStrConst:String,Skippable",
             "outStr1:String,outInt1:Integer,outCustom1:org.jdl.Custom",
             "str1:String,int1:Integer,custom1:org.jdl.Custom",
 //                "[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1",
             "[din]str1->inStr,[din]int1->inInt1,[din]custom1->inCustom1,[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1",
             "String:String, Integer:Integer, Boolean, Float, Object");
 
-    public void showDataMapper() {
-        Window.alert("Hello");
+    public void showDataIOEditor( String assignmentData ) {
+        Window.alert("DesignerPresenter.showDataIOEditor param assignmentdata = " + assignmentData);
 
-        List<AssignmentRow> inputAssignmentRows = assignmentData.getAssignmentRows(VariableType.INPUT);
+        List<AssignmentRow> inputAssignmentRows = _assignmentData.getAssignmentRows(VariableType.INPUT);
         activityDataIOEditor.setInputAssignmentRows(inputAssignmentRows);
-        List<AssignmentRow> outputAssignmentRows = assignmentData.getAssignmentRows(VariableType.OUTPUT);
+        List<AssignmentRow> outputAssignmentRows = _assignmentData.getAssignmentRows(VariableType.OUTPUT);
         activityDataIOEditor.setOutputAssignmentRows(outputAssignmentRows);
-        activityDataIOEditor.setDataTypes(assignmentData.getDataTypeNames());
-        activityDataIOEditor.setProcessVariables(assignmentData.getProcessVarNames());
+        activityDataIOEditor.setDataTypes(_assignmentData.getDataTypeNames());
+        activityDataIOEditor.setProcessVariables(_assignmentData.getProcessVarNames());
         activityDataIOEditor.show();
-
     }
 
     public void assetRenameEvent( String uri ) {
