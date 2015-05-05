@@ -389,7 +389,11 @@ ORYX.Plugins.ShapeMenuPlugin = {
 	},
 
 	showDataIOEditor: function() {
-		parent.designersignalshowdataioeditor("variable and assignment data");
+		parent.designersignalshowdataioeditor("variable and assignment data", this.getDataIOEditorData);
+	},
+
+	getDataIOEditorData: function(data) {
+		window.alert("passed back to shapemenu: " + data);
 	},
 
 	onSelectionChanged: function(event) {
