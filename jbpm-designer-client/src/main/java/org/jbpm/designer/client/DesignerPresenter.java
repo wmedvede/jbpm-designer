@@ -3,10 +3,10 @@ package org.jbpm.designer.client;
 import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -37,7 +37,6 @@ import org.uberfire.ext.editor.commons.client.file.CommandWithFileNameAndCommitM
 import org.uberfire.ext.editor.commons.client.file.CopyPopup;
 import org.uberfire.ext.editor.commons.client.file.FileNameAndCommitMessage;
 import org.uberfire.ext.editor.commons.client.file.RenamePopup;
-import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
 import org.uberfire.ext.editor.commons.service.CopyService;
 import org.uberfire.ext.editor.commons.service.DeleteService;
 import org.uberfire.ext.editor.commons.service.RenameService;
@@ -197,8 +196,8 @@ public class DesignerPresenter
     }-*/;
 
     private native void publishShowDataIOEditor( DesignerPresenter dp )/*-{
-        $wnd.designersignalshowdataioeditor = function (assignmentdata) {
-            dp.@org.jbpm.designer.client.DesignerPresenter::showDataIOEditor(Ljava/lang/String;)(assignmentdata);
+        $wnd.designersignalshowdataioeditor = function (inputdata, jscallback) {
+            dp.@org.jbpm.designer.client.DesignerPresenter::showDataIOEditor(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(inputdata, jscallback);
         }
     }-*/;
 
@@ -237,17 +236,29 @@ public class DesignerPresenter
             "[din]str1->inStr,[din]int1->inInt1,[din]custom1->inCustom1,[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1",
             "String:String, Integer:Integer, Boolean, Float, Object");
 
-    public void showDataIOEditor( String assignmentData ) {
-        Window.alert("DesignerPresenter.showDataIOEditor param assignmentdata = " + assignmentData);
+    public void showDataIOEditor(final String assignmentData, final JavaScriptObject jscallback) {
+        //Window.alert("DesignerPresenter.showDataIOEditor param assignmentdata = " + assignmentData);
+        final DesignerPresenter dp = this;
+        activityDataIOEditor.setCallback(
+                new ActivityDataIOEditor.GetDataCallback() {
+                    @Override
+                    public void getData(String assignmentData) {
+                        dp.getDataIOEditorData(assignmentData, jscallback);
+                     }
+                }
+        );
 
-        List<AssignmentRow> inputAssignmentRows = _assignmentData.getAssignmentRows(VariableType.INPUT);
-        activityDataIOEditor.setInputAssignmentRows(inputAssignmentRows);
-        List<AssignmentRow> outputAssignmentRows = _assignmentData.getAssignmentRows(VariableType.OUTPUT);
-        activityDataIOEditor.setOutputAssignmentRows(outputAssignmentRows);
+        activityDataIOEditor.setInputAssignmentRows(_assignmentData.getAssignmentRows(VariableType.INPUT));
+        activityDataIOEditor.setOutputAssignmentRows(_assignmentData.getAssignmentRows(VariableType.OUTPUT));
         activityDataIOEditor.setDataTypes(_assignmentData.getDataTypeNames());
         activityDataIOEditor.setProcessVariables(_assignmentData.getProcessVarNames());
         activityDataIOEditor.show();
     }
+
+    private native void getDataIOEditorData(String assignmentData, final JavaScriptObject jscallback)/*-{
+        jscallback(assignmentData);
+        //$wnd.alert("DesignerPresenter.getDataIOEditorData assignmentdata = " + assignmentData);
+    }-*/;
 
     public void assetRenameEvent( String uri ) {
         vfsServices.call( new RemoteCallback<Path>() {

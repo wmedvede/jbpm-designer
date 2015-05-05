@@ -17,6 +17,12 @@ import org.uberfire.ext.widgets.common.client.common.popups.BaseModal;
 @Dependent
 public class ActivityDataIOEditor extends BaseModal {
 
+    public interface GetDataCallback {
+        public void getData(String assignmentData);
+    }
+
+    GetDataCallback callback = null;
+
     @Inject
     private ActivityDataIOEditorWidget inputAssignmentsWidget;
 
@@ -30,7 +36,6 @@ public class ActivityDataIOEditor extends BaseModal {
 
     public ActivityDataIOEditor() {
         super();
-        
         this.setWidth((double) Window.getClientWidth() * 0.6D + "px");
     }
 
@@ -48,8 +53,11 @@ public class ActivityDataIOEditor extends BaseModal {
         btnOK.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                Window.alert(inputAssignmentsWidget.getAssignmentsAsString());
-                Window.alert(outputAssignmentsWidget.getAssignmentsAsString());
+                //Window.alert(inputAssignmentsWidget.getAssignmentsAsString());
+                //Window.alert(outputAssignmentsWidget.getAssignmentsAsString());
+                if (callback != null) {
+                    callback.getData(inputAssignmentsWidget.getAssignmentsAsString());
+                }
                 hide();
             }
         });
@@ -72,6 +80,10 @@ public class ActivityDataIOEditor extends BaseModal {
 
     @Override
     public void onHide(Event e) {
+    }
+
+    public void setCallback(GetDataCallback callback) {
+        this.callback = callback;
     }
 
     public void setInputAssignmentRows(List<AssignmentRow> inputAssignmentRows) {
