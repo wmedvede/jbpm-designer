@@ -236,6 +236,7 @@ public class DesignerPresenter
             "[din]str1->inStr,[din]int1->inInt1,[din]custom1->inCustom1,[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1",
             "String:String, Integer:Integer, Boolean, Float, Object");
 
+
     public void showDataIOEditor(final String assignmentData, final JavaScriptObject jscallback) {
         //Window.alert("DesignerPresenter.showDataIOEditor param assignmentdata = " + assignmentData);
         final DesignerPresenter dp = this;
@@ -256,9 +257,20 @@ public class DesignerPresenter
     }
 
     private native void getDataIOEditorData(String assignmentData, final JavaScriptObject jscallback)/*-{
-        jscallback(assignmentData);
         //$wnd.alert("DesignerPresenter.getDataIOEditorData assignmentdata = " + assignmentData);
+        jscallback(assignmentData);
     }-*/;
+
+    public void showDataMapper() {
+        Window.alert("Hello");
+
+        activityDataIOEditor.setInputAssignmentRows(_assignmentData.getAssignmentRows(VariableType.INPUT));
+        activityDataIOEditor.setOutputAssignmentRows(_assignmentData.getAssignmentRows(VariableType.OUTPUT));
+        activityDataIOEditor.setDataTypes(_assignmentData.getDataTypeNames());
+        activityDataIOEditor.setProcessVariables(_assignmentData.getProcessVarNames());
+        activityDataIOEditor.show();
+
+    }
 
     public void assetRenameEvent( String uri ) {
         vfsServices.call( new RemoteCallback<Path>() {

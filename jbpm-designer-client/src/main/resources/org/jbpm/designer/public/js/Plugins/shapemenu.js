@@ -393,7 +393,7 @@ ORYX.Plugins.ShapeMenuPlugin = {
 	},
 
 	getDataIOEditorData: function(data) {
-		window.alert("passed back to shapemenu: " + data);
+		window.alert("assignments passed back to shapemenu: " + data);
 	},
 
 	onSelectionChanged: function(event) {
