@@ -100,7 +100,7 @@ ORYX.Plugins.ShapeMenuPlugin = {
 				this.showSourceViewButton();
 
 				// Show the DataIOEditor button
-				this.showDataIOEditorButton();
+				this.showDataIOEditorButton(this.currentShapes);
 
 				// Show the Stencil Buttons
 				this.showStencilButtons(this.currentShapes);	
@@ -389,7 +389,58 @@ ORYX.Plugins.ShapeMenuPlugin = {
 	},
 
 	showDataIOEditor: function() {
-		parent.designersignalshowdataioeditor("variable and assignment data", this.getDataIOEditorData);
+		var element = this.currentShapes[0];
+		var stencil = element.getStencil();
+		var assignments = null;
+
+		if (stencil.property('oryx-assignments') !== undefined) {
+			assignments = element.properties['oryx-assignments'];
+		}
+		else if (stencil.property('oryx-datainputassociations') !== undefined) {
+			assignments = element.properties['oryx-datainputassociations'];
+		}
+		else if (stencil.property('oryx-dataoutputassociations') !== undefined) {
+			assignments = element.properties['oryx-dataoutputassociations'];
+		}
+
+		var inputvars = null;
+		if (stencil.property('oryx-datainputset') !== undefined) {
+			inputvars = element.properties['oryx-datainputset'];
+		}
+		else if (stencil.property('oryx-datainput') !== undefined) {
+			inputvars = element.properties['oryx-datainput'];
+		}
+
+		var outputvars = null;
+		if (stencil.property('oryx-dataoutputset') !== undefined) {
+			outputvars = element.properties['oryx-dataoutputset'];
+		}
+		else if (stencil.property('oryx-dataoutput') !== undefined) {
+			outputvars = element.properties['oryx-dataoutput'];
+		}
+
+		var processvars = "** Variable Definitions **";
+		var processJSON = ORYX.EDITOR.getSerializedJSON();
+		var vardefs = jsonPath(processJSON.evalJSON(), "$.properties.vardefs");
+		if(vardefs) {
+			vardefs.forEach(function(item){
+				if(item.length > 0) {
+					processvars = processvars + ',' + item;
+				}
+			});
+		}
+
+
+		var datatypes = "String:String, Integer:Integer, Boolean:Boolean, Float:Float, Object:Object";
+
+		s = "assignments = " + assignments + "\n" +
+				"inputvars = " + inputvars + "\n" +
+				"outputvars = " + outputvars + "\n" +
+				"processvars = " + processvars + "\n" +
+				"datatypes = " + datatypes;
+		window.alert(s);
+		//var assignmentData = {'inputvars':inputvars, 'outputvars':outputvars, 'datatypes':datatypes, 'assignments':assignments};
+		parent.designersignalshowdataioeditor(inputvars, outputvars, processvars, assignments, datatypes, this.getDataIOEditorData);
 	},
 
 	getDataIOEditorData: function(data) {
@@ -436,7 +487,18 @@ ORYX.Plugins.ShapeMenuPlugin = {
 		}
 	},
 
-	showDataIOEditorButton : function() {
+	/**
+	 * Show button for editing Data I/O Variables and assignments
+	 *
+	 * @param elements
+	 */
+	showDataIOEditorButton : function(elements) {
+		if(elements.length != 1) return;
+
+		if (! this.hasDataIOProperty(elements[0])) {
+			return;
+		}
+
 		// reset group number
 		this.dataIOEditorButton.group = 3;
 		if(this.currentShapes && this.currentShapes[0] && this.currentShapes[0].properties && this.currentShapes[0].properties['oryx-tasktype'] &&
@@ -446,6 +508,24 @@ ORYX.Plugins.ShapeMenuPlugin = {
 			this.dataIOEditorButton.group = this.dataIOEditorButton.group - 1;
 			this.dataIOEditorButton.prepareToShow();
 		}
+	},
+
+	/**
+	 * Tests whether an element has any properties related to Data I/O
+	 *
+	 * @param element
+	 * @returns {boolean}
+	 */
+	hasDataIOProperty: function(element) {
+		var stencil = element.getStencil();
+		var dataIOPropertyIds = ["oryx-assignments", "oryx-datainputassociations", "oryx-dataoutputassociations",
+			"oryx-datainput", "oryx-datainputset", "oryx-dataoutput", "oryx-dataoutputset"];
+		for (var i = 0; i < dataIOPropertyIds.length; i++) {
+			if (stencil.property(dataIOPropertyIds[i]) !== undefined) {
+				return true;
+			}
+		}
+		return false;
 	},
 
 	/**

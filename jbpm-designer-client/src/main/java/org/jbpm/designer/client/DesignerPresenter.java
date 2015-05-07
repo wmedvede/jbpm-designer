@@ -196,8 +196,8 @@ public class DesignerPresenter
     }-*/;
 
     private native void publishShowDataIOEditor( DesignerPresenter dp )/*-{
-        $wnd.designersignalshowdataioeditor = function (inputdata, jscallback) {
-            dp.@org.jbpm.designer.client.DesignerPresenter::showDataIOEditor(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(inputdata, jscallback);
+        $wnd.designersignalshowdataioeditor = function (inputvars, outputvars, processvars, assignments, datatypes, jscallback) {
+            dp.@org.jbpm.designer.client.DesignerPresenter::showDataIOEditor(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(inputvars, outputvars, processvars, assignments, datatypes, jscallback);
         }
     }-*/;
 
@@ -234,24 +234,25 @@ public class DesignerPresenter
             "str1:String,int1:Integer,custom1:org.jdl.Custom",
 //                "[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1",
             "[din]str1->inStr,[din]int1->inInt1,[din]custom1->inCustom1,[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1",
-            "String:String, Integer:Integer, Boolean, Float, Object");
+            "String:String, Integer:Integer, Boolean:Boolean, Float:Float, Object:Object");
 
-    public void showDataIOEditor(final String assignmentData, final JavaScriptObject jscallback) {
+    public void showDataIOEditor(final String inputvars, final String outputvars, final String processvars, final String assignments, final String datatypes, final JavaScriptObject jscallback) {
         //Window.alert("DesignerPresenter.showDataIOEditor param assignmentdata = " + assignmentData);
         final DesignerPresenter dp = this;
         activityDataIOEditor.setCallback(
                 new ActivityDataIOEditor.GetDataCallback() {
                     @Override
-                    public void getData(String assignmentData) {
-                        dp.getDataIOEditorData(assignmentData, jscallback);
-                     }
+                    public void getData(String data) {
+                        dp.getDataIOEditorData(data, jscallback);
+                    }
                 }
         );
+        AssignmentData assignmentData = new AssignmentData(inputvars, outputvars, processvars, assignments, datatypes);
 
-        activityDataIOEditor.setInputAssignmentRows(_assignmentData.getAssignmentRows(VariableType.INPUT));
-        activityDataIOEditor.setOutputAssignmentRows(_assignmentData.getAssignmentRows(VariableType.OUTPUT));
-        activityDataIOEditor.setDataTypes(_assignmentData.getDataTypeNames());
-        activityDataIOEditor.setProcessVariables(_assignmentData.getProcessVarNames());
+        activityDataIOEditor.setInputAssignmentRows(assignmentData.getAssignmentRows(VariableType.INPUT));
+        activityDataIOEditor.setOutputAssignmentRows(assignmentData.getAssignmentRows(VariableType.OUTPUT));
+        activityDataIOEditor.setDataTypes(assignmentData.getDataTypeNames());
+        activityDataIOEditor.setProcessVariables(assignmentData.getProcessVarNames());
         activityDataIOEditor.show();
     }
 
