@@ -391,7 +391,7 @@ ORYX.Plugins.ShapeMenuPlugin = {
 	showDataIOEditor: function() {
 		var element = this.currentShapes[0];
 		var stencil = element.getStencil();
-		var assignments = null;
+		var assignments = undefined;
 
 		if (stencil.property('oryx-assignments') !== undefined) {
 			assignments = element.properties['oryx-assignments'];
@@ -403,20 +403,22 @@ ORYX.Plugins.ShapeMenuPlugin = {
 			assignments = element.properties['oryx-dataoutputassociations'];
 		}
 
-		var inputvars = null;
-		if (stencil.property('oryx-datainputset') !== undefined) {
-			inputvars = element.properties['oryx-datainputset'];
+		var datainput = undefined;
+		if (stencil.property('oryx-datainput') !== undefined) {
+			datainput = element.properties['oryx-datainput'];
 		}
-		else if (stencil.property('oryx-datainput') !== undefined) {
-			inputvars = element.properties['oryx-datainput'];
+		var datainputset = undefined;
+		if (stencil.property('oryx-datainputset') !== undefined) {
+			datainputset = element.properties['oryx-datainputset'];
 		}
 
-		var outputvars = null;
-		if (stencil.property('oryx-dataoutputset') !== undefined) {
-			outputvars = element.properties['oryx-dataoutputset'];
+		var dataoutput = undefined;
+		if (stencil.property('oryx-dataoutput') !== undefined) {
+			dataoutput = element.properties['oryx-dataoutput'];
 		}
-		else if (stencil.property('oryx-dataoutput') !== undefined) {
-			outputvars = element.properties['oryx-dataoutput'];
+		var dataoutputset = undefined;
+		if (stencil.property('oryx-dataoutputset') !== undefined) {
+			dataoutputset = element.properties['oryx-dataoutputset'];
 		}
 
 		var processvars = "** Variable Definitions **";
@@ -434,13 +436,16 @@ ORYX.Plugins.ShapeMenuPlugin = {
 		var datatypes = "String:String, Integer:Integer, Boolean:Boolean, Float:Float, Object:Object";
 
 		s = "assignments = " + assignments + "\n" +
-				"inputvars = " + inputvars + "\n" +
-				"outputvars = " + outputvars + "\n" +
+				"datainput = " + datainput + "\n" +
+				"datainputset = " + datainputset + "\n" +
+				"dataoutput = " + dataoutput + "\n" +
+				"dataoutputset = " + dataoutputset + "\n" +
 				"processvars = " + processvars + "\n" +
 				"datatypes = " + datatypes;
 		window.alert(s);
-		//var assignmentData = {'inputvars':inputvars, 'outputvars':outputvars, 'datatypes':datatypes, 'assignments':assignments};
-		parent.designersignalshowdataioeditor(inputvars, outputvars, processvars, assignments, datatypes, this.getDataIOEditorData);
+		//var assignmentData = {'datainput':datainput, 'datainputset':datainputset, 'dataoutput':dataoutput, 'dataoutputset':dataoutputset,
+		// 'datatypes':datatypes, 'assignments':assignments};
+		parent.designersignalshowdataioeditor(datainput, datainputset, dataoutput, dataoutputset, processvars, assignments, datatypes, this.getDataIOEditorData);
 	},
 
 	getDataIOEditorData: function(data) {
