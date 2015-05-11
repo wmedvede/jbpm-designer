@@ -28,9 +28,9 @@ public class AssignmentDataMarshaller
         return "{\"" + SerializationParts.ENCODED_TYPE + "\":\"" + AssignmentData.class.getName() + "\"," +
 
                 "\"" + SerializationParts.OBJECT_ID + "\":\"" + o.hashCode() + "\"," +
-                "\"" + "dataInputSet" + "\":\"" + o.getInputVariablesString() + "\"," +
-                "\"" + "dataOutputSet" + "\":\"" + o.getOutputVariablesString() + "\"," +
-                "\"" + "processVars" + "\":\"" + o.getProcessVariablesString() + "\"," +
+                "\"" + "inputVariables" + "\":\"" + o.getInputVariablesString() + "\"," +
+                "\"" + "outputVariables" + "\":\"" + o.getOutputVariablesString() + "\"," +
+                "\"" + "processVariables" + "\":\"" + o.getProcessVariablesString() + "\"," +
                 "\"" + "assignments" + "\":\"" + o.getAssignmentsString() + "\"," +
                 "\"" + "dataTypes" + "\":\"" + o.getDataTypesString() + "\"}";
 //                o.toString() + "\"}";

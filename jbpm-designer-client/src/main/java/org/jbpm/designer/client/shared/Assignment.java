@@ -38,7 +38,7 @@ public class Assignment {
             assignmentData.addVariable(variable);
         }
 
-        this.processVar = assignmentData.findProcessVar(processVarName);
+        this.processVar = assignmentData.findProcessVariable(processVarName);
         this.constant = constant;
     }
 
@@ -51,7 +51,7 @@ public class Assignment {
             assignmentData.addVariable(variable);
         }
 
-        processVar = assignmentData.findProcessVar(processVariableName);
+        processVar = assignmentData.findProcessVariable(processVariableName);
         this.constant = constant;
     }
 
@@ -92,7 +92,7 @@ public class Assignment {
     }
 
     public void setProcessVarName(String processVarName) {
-        this.processVar = assignmentData.findProcessVar(processVarName);
+        this.processVar = assignmentData.findProcessVariable(processVarName);
     }
 
     public String getConstant() {

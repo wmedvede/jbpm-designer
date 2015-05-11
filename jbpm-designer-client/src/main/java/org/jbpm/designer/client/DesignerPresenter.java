@@ -1,20 +1,17 @@
 package org.jbpm.designer.client;
 
-import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jbpm.designer.client.popup.ActivityDataIOEditor;
 import org.jbpm.designer.client.shared.AssignmentData;
-import org.jbpm.designer.client.shared.AssignmentRow;
 import org.jbpm.designer.client.shared.Variable.VariableType;
 import org.jbpm.designer.client.type.Bpmn2Type;
 import org.jbpm.designer.service.DesignerAssetService;
@@ -282,7 +279,7 @@ public class DesignerPresenter
         activityDataIOEditor.setInputAssignmentRows(assignmentData.getAssignmentRows(VariableType.INPUT));
         activityDataIOEditor.setOutputAssignmentRows(assignmentData.getAssignmentRows(VariableType.OUTPUT));
         activityDataIOEditor.setDataTypes(assignmentData.getDataTypeNames());
-        activityDataIOEditor.setProcessVariables(assignmentData.getProcessVarNames());
+        activityDataIOEditor.setProcessVariables(assignmentData.getProcessVariableNames());
         activityDataIOEditor.show();
     }
 

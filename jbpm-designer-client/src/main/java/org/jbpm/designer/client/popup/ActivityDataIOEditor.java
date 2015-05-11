@@ -10,6 +10,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import org.jboss.errai.marshalling.client.Marshalling;
+import org.jbpm.designer.client.shared.AssignmentData;
 import org.jbpm.designer.client.shared.AssignmentRow;
 import org.jbpm.designer.client.shared.Variable.VariableType;
 import org.uberfire.ext.widgets.common.client.common.popups.BaseModal;
@@ -56,7 +58,9 @@ public class ActivityDataIOEditor extends BaseModal {
                 //Window.alert(inputAssignmentsWidget.getAssignmentsAsString());
                 //Window.alert(outputAssignmentsWidget.getAssignmentsAsString());
                 if (callback != null) {
-                    callback.getData(inputAssignmentsWidget.getAssignmentsAsString());
+                    AssignmentData data = new AssignmentData(inputAssignmentsWidget.getData(), outputAssignmentsWidget.getData());
+                    String sData = Marshalling.toJSON(data);
+                    callback.getData(sData);
                 }
                 hide();
             }

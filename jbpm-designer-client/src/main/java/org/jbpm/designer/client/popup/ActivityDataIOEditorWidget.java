@@ -83,13 +83,8 @@ public class ActivityDataIOEditorWidget extends Composite {
         }
     }
 
-    public String getAssignmentsAsString() {
-        StringBuilder sb = new StringBuilder();
-        for (AssignmentRow ass : assignments.getValue()) {
-            sb.append(ass.toString());
-            sb.append("\n");
-        }
-        return sb.toString();
+    public List<AssignmentRow> getData() {
+        return assignments.getValue();
     }
 
     public VariableType getVariableType() {

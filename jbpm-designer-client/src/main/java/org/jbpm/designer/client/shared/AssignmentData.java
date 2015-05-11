@@ -33,6 +33,50 @@ public class AssignmentData {
         setAssignments(sAssignments);
     }
 
+    /**
+     * Creates AssignmentData based on a list of inputAssignmentRows and outputAssignmentRows.
+     * Note: This does only populate the processVariables referenced in assignments and does
+     * not populate the dataTypes member
+     *
+     * @param inputAssignmentRows
+     * @param outputAssignmentRows
+     */
+    public AssignmentData(List<AssignmentRow> inputAssignmentRows, List<AssignmentRow> outputAssignmentRows) {
+        if (inputAssignmentRows != null) {
+            for (AssignmentRow row : inputAssignmentRows) {
+                convertAssignmentRow(row);
+            }
+        }
+        if (outputAssignmentRows != null) {
+            for (AssignmentRow row : outputAssignmentRows) {
+                convertAssignmentRow(row);
+            }
+        }
+    }
+
+    protected void convertAssignmentRow(AssignmentRow assignmentRow) {
+        if (assignmentRow.getVariableType() == VariableType.INPUT) {
+            Variable var = new Variable(assignmentRow.getName(), assignmentRow.getVariableType(),
+                    assignmentRow.getDataType(), assignmentRow.getCustomDataType());
+            inputVariables.add(var);
+        }
+        else if (assignmentRow.getVariableType() == VariableType.OUTPUT) {
+            Variable var = new Variable(assignmentRow.getName(), assignmentRow.getVariableType(),
+                    assignmentRow.getDataType(), assignmentRow.getCustomDataType());
+            outputVariables.add(var);
+        }
+        if (assignmentRow.getProcessVar() != null && !assignmentRow.getProcessVar().isEmpty()) {
+            Variable processVar = new Variable(assignmentRow.getProcessVar(), VariableType.PROCESS,
+                    assignmentRow.getDataType(), assignmentRow.getCustomDataType());
+            processVariables.add(processVar);
+        }
+
+        Assignment assignment = new Assignment(this, assignmentRow.getName(), assignmentRow.getVariableType(),
+                assignmentRow.getProcessVar(), assignmentRow.getConstant());
+        assignments.add(assignment);
+    }
+
+
     public List<Variable> getInputVariables() {
         return inputVariables;
     }
@@ -170,7 +214,7 @@ public class AssignmentData {
 
     }
 
-    public Variable findProcessVar(String processVarName) {
+    public Variable findProcessVariable(String processVarName) {
         if (processVarName == null || processVarName.isEmpty()) {
             return null;
         }
@@ -227,7 +271,7 @@ public class AssignmentData {
         return sb.toString();
     }
 
-    public List<String> getProcessVarNames() {
+    public List<String> getProcessVariableNames() {
         List<String> processVarNames = new ArrayList<String>();
         for (Variable processVar : processVariables) {
             processVarNames.add(processVar.getName());
@@ -255,9 +299,9 @@ public class AssignmentData {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\"dataInputSet\":\"").append(getInputVariablesString()).append("\"").append(",\n");
-        sb.append("\"dataOutputSet\":\"").append(getOutputVariablesString()).append("\"").append(",\n");
-        sb.append("\"processVars\":\"").append(getProcessVariablesString()).append("\"").append(",\n");
+        sb.append("\"inputVariables\":\"").append(getInputVariablesString()).append("\"").append(",\n");
+        sb.append("\"outputVariables\":\"").append(getOutputVariablesString()).append("\"").append(",\n");
+        sb.append("\"processVariables\":\"").append(getProcessVariablesString()).append("\"").append(",\n");
         sb.append("\"assignments\":\"").append(getAssignmentsString()).append("\"").append(",\n");
         sb.append("\"dataTypes\":\"").append(getDataTypesString()).append("\"");
 

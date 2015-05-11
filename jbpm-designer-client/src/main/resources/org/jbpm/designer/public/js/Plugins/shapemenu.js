@@ -450,6 +450,15 @@ ORYX.Plugins.ShapeMenuPlugin = {
 
 	getDataIOEditorData: function(data) {
 		window.alert("passed back to shapemenu: " + data);
+		var obj = JSON.parse(data);
+
+		var element = this.currentShapes[0];
+		var stencil = element.getStencil();
+
+		element.setProperty('oryx-datainputset', obj['inputVariables']);
+		element.setProperty('oryx-dataoutputset', obj['outputVariables']);
+		element.setProperty('oryx-assignments', obj['assignments']);
+
 	},
 
 	onSelectionChanged: function(event) {
